@@ -122,3 +122,52 @@ console.log(liftg(mul)()); // undefined
 console.log(liftg(mul)(3)()); // 3
 console.log(liftg(mul)(3)(0)(4)()); // 0
 console.log(liftg(mul)(1)(2)(4)(8)()); // 64
+
+//*******************************************************
+//Write a function arrayg that will build an array from many invocations
+
+// function arrayg(first) {
+//   var array = [];
+//   function more(next) {
+//     if (next === undefined) {
+//       return array;
+//     }
+//     array.push(next);
+//     return more;
+//   }
+//   return more(first);
+// }
+
+//or
+
+function arrayg(first) {
+  if (first === undefined) {
+    return [];
+  }
+  return liftg(function(array, value) {
+    array.push(value);
+    return array;
+  })([first]);
+}
+
+console.log(arrayg()); //[]
+console.log(arrayg(3)()); //[3]
+console.log(arrayg(3)(4)(5)()); //[3,4,5]
+
+//****************************************************
+// Make a function continuize that takes a unary function, and returns a function that takes a callback and an argument.
+function continuize(unary) {
+  return function(callback, arg) {
+    return callback(unary(arg));
+  };
+}
+
+// ES6
+// function continuize(any) {
+//   return function(callback, ...x) {
+//     return callback(any(...x));
+//   };
+// }
+
+sqrtc = continuize(Math.sqrt);
+console.log(sqrtc(alert, 81)); //9
